@@ -17,6 +17,7 @@ jobs:
       
       - name: Replace Git tag and hash 
         run: |
+          echo "Using $GIT_TAG $GIT_HASH "
           sed -i "s/SED_GIT_HASH/$GIT_HASH/g" */*.*
           sed -i "s/SED_GIT_TAG/$GIT_TAG/g" */*.*
 
