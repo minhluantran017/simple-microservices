@@ -2,6 +2,11 @@
 
 A simple microservices project. Everything is simply for demo purpose.
 
+![](https://img.shields.io/badge/Environment-Docker-blue)
+[![](https://img.shields.io/badge/Owner-minhluantran017-darkviolet)](mailto:minhluantran017@gmail.com)
+
+![](https://github.com/minhluantran017/simple-microservices/workflows/Check%20Docker%20images/badge.svg)
+
 ## What services inside?
 
 - Python
@@ -10,15 +15,6 @@ A simple microservices project. Everything is simply for demo purpose.
 - PHP
 - and so on, depend on my free time. :)
 
-## What is this built?
-
-The repository is configured to use CircleCI to build all the services.
-
 ## How to run it?
 
-When you make any change to this repository, CircleCI will be triggered to build Docker images for these services.
-
-## How to deploy it?
-
-This is covered inside another repository. TBD
-
+When you make any change to this repository, GitHub Actions will be triggered to build Docker images for these services, deploy and curl to each services to get content.

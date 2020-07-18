@@ -1,0 +1,73 @@
+name: Check Docker images
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-artifact:
+    runs-on: ubuntu-latest
+    env:
+      GIT_HASH: ${GITHUB_SHA::8}
+      GIT_TAG: ${GITHUB_REF#refs/*/}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Replace Git tag and hash 
+        run: |
+          sed -i "s/SED_GIT_HASH/$GIT_HASH/g" */*.*
+          sed -i "s/SED_GIT_TAG/$GIT_TAG/g" */*.*
+
+      - name: Build and push Python images
+        uses: docker/build-push-action@v1
+        with:
+          username: minhluantran017
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: minhluantran017/simple-microservices_python
+          path: python
+          tags: latest, $GIT_TAG
+
+      - name: Build and push Golang images
+        uses: docker/build-push-action@v1
+        with:
+          username: minhluantran017
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: minhluantran017/simple-microservices_golang
+          path: golang
+          tags: latest, $GIT_TAG
+
+      - name: Build and push NodeJS images
+        uses: docker/build-push-action@v1
+        with:
+          username: minhluantran017
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: minhluantran017/simple-microservices_nodejs
+          path: nodejs
+          tags: latest, $GIT_TAG
+
+  deploy-test:
+    runs-on: ubuntu-latest
+    env:
+      GIT_TAG: ${GITHUB_REF#refs/*/}
+    steps:
+      - name: Install Docker
+        run: |
+          sudo apt-get install -y wget
+          wget -qO- https://get.docker.com/ | sudo sh
+          
+      - name: Deploy and test Python services
+        run: |
+          sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python:$GIT_TAG
+          curl -i http://localhost:8080
+
+      - name: Deploy and test Golang services
+        run: |
+          sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang:$GIT_TAG
+          curl -i http://localhost:8081
+
+      - name: Deploy and test NodeJS services
+        run: |
+          sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs:$GIT_TAG
+          curl -i http://localhost:8082

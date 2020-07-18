@@ -1,5 +1,3 @@
-// +build ignore
-
 package main
 
 import (
@@ -9,16 +7,15 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var githash = "${GIT_HASH}"
-	var background = "blue"
-	if ((githash % 2) == 1) {
-		background = "green"
-	}
+	var gittag = "SED_GIT_TAG"
+	var githash = "SED_GIT_HASH"
+
 	fmt.Fprintf(w,"<!DOCTYPE html>")
 	fmt.Fprintf(w,"<html>")
-	fmt.Fprintf(w,"<head><title>Sample NodeJS service</title><style>body { background-color: "+ background +"; }</style></head>")
+	fmt.Fprintf(w,"<head><title>Golang service</title><style>body { background-color: cyan; }</style></head>")
 	fmt.Fprintf(w,"<body>")
-	fmt.Fprintf(w,"<h1 style=\"text-align:center\">This is a simple NodeJS services!!</h1>")
+	fmt.Fprintf(w,"<h1 style=\"text-align:center\">This is a simple Golang services!!</h1>")
+	fmt.Fprintf(w,"<h1 style=\"text-align:center\">Git tag:"+ gittag +"</h1>")
 	fmt.Fprintf(w,"<h1 style=\"text-align:center\">Git commit ID:"+ githash +"</h1>")
 	fmt.Fprintf(w,"</body>")
 	fmt.Fprintf(w,"</html>")
