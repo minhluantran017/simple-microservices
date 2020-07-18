@@ -17,9 +17,9 @@ jobs:
       
       - name: Replace Git tag and hash 
         run: |
-          echo "Using $GIT_TAG $GIT_HASH "
-          sed -i "s/SED_GIT_HASH/$GIT_HASH/g" */*.*
-          sed -i "s/SED_GIT_TAG/$GIT_TAG/g" */*.*
+          echo "Using ${{ env.GIT_TAG }} ${{ env.GIT_HASH }} "
+          sed -i "s/SED_GIT_HASH/${{ env.GIT_HASH }}/g" */*.*
+          sed -i "s/SED_GIT_TAG/${{ env.GIT_TAG }}/g" */*.*
 
       - name: Build and push Python images
         uses: docker/build-push-action@v1
@@ -50,6 +50,7 @@ jobs:
 
   deploy-test:
     runs-on: ubuntu-latest
+    needs: build-artifact
     env:
       GIT_TAG: ${GITHUB_REF#refs/*/}
     steps:
@@ -60,15 +61,15 @@ jobs:
           
       - name: Deploy and test Python services
         run: |
-          sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python:$GIT_TAG
+          sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python
           curl -i http://localhost:8080
 
       - name: Deploy and test Golang services
         run: |
-          sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang:$GIT_TAG
+          sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang
           curl -i http://localhost:8081
 
       - name: Deploy and test NodeJS services
         run: |
-          sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs:$GIT_TAG
+          sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs
           curl -i http://localhost:8082
