@@ -28,7 +28,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: minhluantran017/simple-microservices_python
           path: python
-          tags: latest, ${{ env.GIT_TAG }}
+          tags: latest
+          tag_with_ref: true
 
       - name: Build and push Golang images
         uses: docker/build-push-action@v1
@@ -37,7 +38,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: minhluantran017/simple-microservices_golang
           path: golang
-          tags: latest, ${{ env.GIT_TAG }}
+          tags: latest
+          tag_with_ref: true
 
       - name: Build and push NodeJS images
         uses: docker/build-push-action@v1
@@ -46,13 +48,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: minhluantran017/simple-microservices_nodejs
           path: nodejs
-          tags: latest, ${{ env.GIT_TAG }}
+          tags: latest
+          tag_with_ref: true
 
   deploy-test:
     runs-on: ubuntu-latest
     needs: build-artifact
-    env:
-      GIT_TAG: ${GITHUB_REF#refs/*/}
     steps:
       - name: Install Docker
         run: |
@@ -61,15 +62,15 @@ jobs:
           
       - name: Deploy and test Python services
         run: |
-          sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python:${{ env.GIT_TAG }}
+          sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python
           curl -i http://localhost:8080
 
       - name: Deploy and test Golang services
         run: |
-          sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang:${{ env.GIT_TAG }}
+          sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang
           curl -i http://localhost:8081
 
       - name: Deploy and test NodeJS services
         run: |
-          sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs:${{ env.GIT_TAG }}
+          sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs
           curl -i http://localhost:8082
