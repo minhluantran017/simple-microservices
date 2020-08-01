@@ -63,14 +63,11 @@ jobs:
       - name: Deploy and test Python services
         run: |
           sudo docker run -d --rm -p 8080:8080 minhluantran017/simple-microservices_python
-          curl -i http://localhost:8080
 
       - name: Deploy and test Golang services
         run: |
           sudo docker run -d --rm -p 8081:8081 minhluantran017/simple-microservices_golang
-          curl -i http://localhost:8081
 
       - name: Deploy and test NodeJS services
         run: |
           sudo docker run -d --rm -p 8082:8082 minhluantran017/simple-microservices_nodejs
-          curl -i http://localhost:8082
