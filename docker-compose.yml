@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+
+  traefik:
+    image: "traefik:v2.3"
+    container_name: "guard"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  python:
+    build:
+      context: ./python
+    image: "minhluantran017/simple-microservices_python"
+    container_name: "pepe"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.python.rule=Host(`127.0.0.1`) && PathPrefix(`/python`)"
+      - "traefik.http.routers.python.entrypoints=web"
+      - "traefik.http.services.python.loadbalancer.server.port=8081"
+
+  nodejs:
+    build:
+      context: ./nodejs
+    image: "minhluantran017/simple-microservices_nodejs"
+    container_name: "nana"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nodejs.rule=Host(`127.0.0.1`) && PathPrefix(`/nodejs`)"
+      - "traefik.http.routers.nodejs.entrypoints=web"
+      - "traefik.http.services.nodejs.loadbalancer.server.port=8082"
+
+  golang:
+    build:
+      context: ./golang
+    image: "minhluantran017/simple-microservices_golang"
+    container_name: "gaugau"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.golang.rule=Host(`127.0.0.1`) && PathPrefix(`/golang`)"
+      - "traefik.http.routers.golang.entrypoints=web"
+      - "traefik.http.services.golang.loadbalancer.server.port=8083"

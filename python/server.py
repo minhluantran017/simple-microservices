@@ -3,6 +3,7 @@ from flask import Flask
 app = Flask(__name__)
 
 @app.route('/')
+@app.route('/python')
 def index():
     gittag = 'SED_GIT_TAG'
     githash = 'SED_GIT_HASH'
@@ -18,4 +19,4 @@ def index():
     return index
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(port=8081, host='0.0.0.0')

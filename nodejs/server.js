@@ -1,9 +1,10 @@
 var http = require('http');
 var url = require('url');
 var server = http.createServer(function(request, response) {
-  var path = url.parse(request.url).pathname;
   var gittag = "SED_GIT_TAG";
   var githash = "SED_GIT_HASH";
+
+  console.log(new Date().toISOString() + " - " + request.method + " - " + request.url);
 
   response.write("<!DOCTYPE html>");
   response.write("<html>");
